@@ -1,0 +1,92 @@
+{
+  "execution_enabled": {
+    "description": "启用 Windows PowerShell 远程执行",
+    "type": "bool",
+    "default": false,
+    "hint": "高风险开关。只有 authorized_sender_ids 中的真实平台用户才能调用。"
+  },
+  "authorized_sender_ids": {
+    "description": "允许执行 Windows PowerShell 的 QQ 用户",
+    "type": "list",
+    "default": [],
+    "_special": "sender_id",
+    "hint": "默认空列表拒绝所有请求；定时、主动聊天和合成事件始终拒绝。"
+  },
+  "ssh_host": {
+    "description": "SSH 反向隧道在 AstrBot 主机上的监听地址",
+    "type": "string",
+    "default": "127.0.0.1",
+    "hint": "仅允许 loopback 地址，推荐 127.0.0.1。"
+  },
+  "ssh_port": {
+    "description": "SSH 反向隧道在 AstrBot 主机上的监听端口",
+    "type": "int",
+    "default": 2222,
+    "slider": {"min": 1, "max": 65535, "step": 1}
+  },
+  "ssh_user": {
+    "description": "Windows OpenSSH 用户名",
+    "type": "string",
+    "default": ""
+  },
+  "identity_file": {
+    "description": "AstrBot 主机上用于登录 Windows 的 SSH 私钥绝对路径",
+    "type": "string",
+    "default": "",
+    "hint": "私钥不得放入插件目录或 Git 仓库；建议 chmod 600。"
+  },
+  "known_hosts_file": {
+    "description": "AstrBot 主机上的专用 known_hosts 文件绝对路径",
+    "type": "string",
+    "default": "",
+    "hint": "必须预先写入 Windows OpenSSH 主机公钥，插件强制 StrictHostKeyChecking=yes。"
+  },
+  "host_key_alias": {
+    "description": "known_hosts 中的 Windows 主机别名",
+    "type": "string",
+    "default": "feiyu-windows",
+    "hint": "推荐 known_hosts 行以 feiyu-windows 开头，使隧道端口变化时仍能校验同一台电脑。"
+  },
+  "ssh_executable": {
+    "description": "AstrBot 主机上的 OpenSSH 客户端",
+    "type": "string",
+    "default": "ssh",
+    "hint": "可填写 ssh 或 ssh 可执行文件的绝对路径。"
+  },
+  "powershell_executable": {
+    "description": "Windows 上的 PowerShell 程序",
+    "type": "string",
+    "default": "powershell.exe",
+    "options": ["powershell.exe", "pwsh.exe"]
+  },
+  "connect_timeout_seconds": {
+    "description": "SSH 建连超时（秒）",
+    "type": "int",
+    "default": 10,
+    "slider": {"min": 1, "max": 60, "step": 1}
+  },
+  "default_timeout_seconds": {
+    "description": "PowerShell 默认执行超时（秒）",
+    "type": "int",
+    "default": 30,
+    "slider": {"min": 1, "max": 300, "step": 1}
+  },
+  "max_timeout_seconds": {
+    "description": "PowerShell 最大执行超时（秒）",
+    "type": "int",
+    "default": 120,
+    "slider": {"min": 1, "max": 900, "step": 1}
+  },
+  "max_command_chars": {
+    "description": "单条 PowerShell 脚本最大字符数",
+    "type": "int",
+    "default": 12000,
+    "slider": {"min": 100, "max": 50000, "step": 100}
+  },
+  "max_output_bytes": {
+    "description": "stdout 和 stderr 各自最大返回字节数",
+    "type": "int",
+    "default": 65536,
+    "slider": {"min": 1024, "max": 1048576, "step": 1024}
+  }
+}

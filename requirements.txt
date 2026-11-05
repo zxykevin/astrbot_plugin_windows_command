@@ -1,0 +1,1 @@
+# 使用 AstrBot 主机自带的 Python 标准库和系统 OpenSSH 客户端，无额外 Python 依赖。
