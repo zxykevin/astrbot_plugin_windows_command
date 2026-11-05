@@ -1,7 +1,7 @@
 name: astrbot_plugin_windows_command
 display_name: Windows Command
 desc: 通过现有 SSH 反向隧道，在受信任的 Windows 电脑上执行 PowerShell 命令。
-version: v0.1.0
+version: v0.2.0
 author: zexuan604
 repo: "https://github.com/zxykevin/astrbot_plugin_windows_command"
 astrbot_version: ">=4.29.4,<5"

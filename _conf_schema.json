@@ -12,6 +12,111 @@
     "_special": "sender_id",
     "hint": "默认空列表拒绝所有请求；定时、主动聊天和合成事件始终拒绝。"
   },
+  "safe_action_allow_shutdown": {
+    "description": "允许固定动作工具安排或取消关机",
+    "type": "bool",
+    "default": false,
+    "hint": "仅开放带 60-3600 秒倒计时的固定关机动作；不会开放任意程序、下载或删除。自动关机另有独立开关。"
+  },
+  "autonomous_enabled": {
+    "description": "启用陪伴角色的 Windows 主动动作",
+    "type": "bool",
+    "default": false,
+    "hint": "只处理 Private Companion 已送达但未回复的主动私聊，以及可选的夜间用机提醒；不开放任意 PowerShell。"
+  },
+  "autonomous_companion_db_path": {
+    "description": "Private Companion 运行时数据库绝对路径",
+    "type": "string",
+    "default": "/AstrBot/data/plugin_data/astrbot_plugin_private_companion/installations/main/runtime/companion-v2.sqlite3"
+  },
+  "autonomous_provider_id": {
+    "description": "判断是否把主动消息写成桌面信的模型 Provider ID",
+    "type": "string",
+    "default": "",
+    "hint": "留空时仍会推送通知，但不会自主写桌面 TXT。"
+  },
+  "autonomous_timezone": {
+    "description": "主动动作与夜间规则时区",
+    "type": "string",
+    "default": "Europe/Berlin"
+  },
+  "autonomous_poll_seconds": {
+    "description": "主动动作检查间隔（秒）",
+    "type": "int",
+    "default": 60,
+    "slider": {"min": 15, "max": 600, "step": 15}
+  },
+  "autonomous_unanswered_minutes": {
+    "description": "QQ 主动私聊未回复多久后推送到电脑（分钟）",
+    "type": "int",
+    "default": 15,
+    "slider": {"min": 1, "max": 180, "step": 1}
+  },
+  "autonomous_daily_notification_limit": {
+    "description": "每天最多主动推送电脑通知数",
+    "type": "int",
+    "default": 8,
+    "slider": {"min": 0, "max": 30, "step": 1}
+  },
+  "autonomous_daily_note_limit": {
+    "description": "每天最多自主写入桌面信数量",
+    "type": "int",
+    "default": 2,
+    "slider": {"min": 0, "max": 10, "step": 1}
+  },
+  "autonomous_note_classifier_enabled": {
+    "description": "让模型判断是否值得写成桌面信",
+    "type": "bool",
+    "default": true
+  },
+  "autonomous_bedtime_enabled": {
+    "description": "启用夜间连续用机提醒",
+    "type": "bool",
+    "default": false,
+    "hint": "只读空闲时间并发通知；是否最终关机由另外两个关机开关共同控制。"
+  },
+  "autonomous_bedtime_start_hour": {
+    "description": "夜间提醒开始小时（0-23）",
+    "type": "int",
+    "default": 0,
+    "slider": {"min": 0, "max": 23, "step": 1}
+  },
+  "autonomous_bedtime_end_hour": {
+    "description": "夜间提醒结束小时（0-23）",
+    "type": "int",
+    "default": 7,
+    "slider": {"min": 0, "max": 23, "step": 1}
+  },
+  "autonomous_active_minutes_before_warning": {
+    "description": "连续活跃多久后提醒休息（分钟）",
+    "type": "int",
+    "default": 180,
+    "slider": {"min": 30, "max": 720, "step": 15}
+  },
+  "autonomous_idle_reset_minutes": {
+    "description": "空闲多久视为已经离开电脑并重置连续使用（分钟）",
+    "type": "int",
+    "default": 20,
+    "slider": {"min": 5, "max": 120, "step": 5}
+  },
+  "autonomous_shutdown_enabled": {
+    "description": "夜间提醒后仍持续使用时允许安排关机",
+    "type": "bool",
+    "default": false,
+    "hint": "只有 safe_action_allow_shutdown 也开启时才生效；提醒后仍有宽限期和关机倒计时。"
+  },
+  "autonomous_shutdown_after_warning_minutes": {
+    "description": "提醒后继续使用多久才安排关机（分钟）",
+    "type": "int",
+    "default": 30,
+    "slider": {"min": 5, "max": 120, "step": 5}
+  },
+  "autonomous_shutdown_delay_seconds": {
+    "description": "安排关机后的最终倒计时（秒）",
+    "type": "int",
+    "default": 600,
+    "slider": {"min": 60, "max": 3600, "step": 60}
+  },
   "ssh_host": {
     "description": "SSH 反向隧道在 AstrBot 主机上的监听地址",
     "type": "string",

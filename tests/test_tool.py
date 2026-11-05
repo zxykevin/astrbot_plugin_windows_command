@@ -41,6 +41,8 @@ def _install_astrbot_stubs() -> None:
 _install_astrbot_stubs()
 
 from windows_command.executor import ExecutionResult
+from windows_command.safe_actions import SafeWindowsActions
+from windows_command.safe_tool import WindowsSafeActionTool
 from windows_command.tool import WindowsPowerShellTool
 
 
@@ -116,6 +118,51 @@ class WindowsPowerShellToolTests(unittest.IsolatedAsyncioTestCase):
         event = RealEvent()
         event.__class__ = type("SyntheticEvent", (RealEvent,), {})
         result = json.loads(await self.make_tool().call(context_for(event), "Get-Date"))
+        self.assertEqual(result["error"]["code"], "DIRECT_USER_REQUIRED")
+        self.assertEqual(self.executor.calls, [])
+
+
+class WindowsSafeActionToolTests(unittest.IsolatedAsyncioTestCase):
+    def setUp(self):
+        self.executor = RecordingExecutor()
+        self.actions = SafeWindowsActions(self.executor)
+
+    def make_tool(self, *, shutdown=False):
+        return WindowsSafeActionTool(
+            actions=self.actions,
+            execution_enabled=True,
+            authorized_sender_ids=frozenset({"10001"}),
+            allow_shutdown=shutdown,
+        )
+
+    async def test_notification_uses_fixed_script_and_hides_message(self):
+        result = json.loads(await self.make_tool().call(
+            context_for(RealEvent()), "notify", title="大肥鱼", text="想你了 & 早点休息"))
+        self.assertTrue(result["ok"])
+        command, timeout = self.executor.calls[0]
+        self.assertIsNone(timeout)
+        self.assertIn("ToastNotificationManager", command)
+        self.assertNotIn("想你了", command)
+        self.assertNotIn("& 早点休息", command)
+
+    async def test_desktop_note_has_no_caller_path(self):
+        result = json.loads(await self.make_tool().call(
+            context_for(RealEvent()), "write_desktop_note", text="一封信"))
+        self.assertTrue(result["ok"])
+        command, _ = self.executor.calls[0]
+        self.assertIn("GetFolderPath('DesktopDirectory')", command)
+        self.assertNotIn("一封信", command)
+
+    async def test_shutdown_remains_separately_disabled(self):
+        result = json.loads(await self.make_tool().call(
+            context_for(RealEvent()), "schedule_shutdown", shutdown_delay_seconds=600))
+        self.assertEqual(result["error"]["code"], "SHUTDOWN_DISABLED")
+        self.assertEqual(self.executor.calls, [])
+
+    async def test_synthetic_event_cannot_use_safe_tool(self):
+        event = RealEvent()
+        event.__class__ = type("SyntheticEvent", (RealEvent,), {})
+        result = json.loads(await self.make_tool().call(context_for(event), "status"))
         self.assertEqual(result["error"]["code"], "DIRECT_USER_REQUIRED")
         self.assertEqual(self.executor.calls, [])
 
